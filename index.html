@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>RetrievalFuse: Neural 3D Scene Reconstruction with a Database</title>
+
+    <link rel="stylesheet" href="w3.css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"
+        integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.4/css/bulma.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma-carousel@4.0.3/dist/css/bulma-carousel.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css">
+    <link rel="stylesheet" href="index.css">
+    <link rel="stylesheet" href="fontawesome.all.min.css">
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
+        integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+        integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+        crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"
+        integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI"
+        crossorigin="anonymous"></script>
+    <script defer="" src="fontawesome.all.min.js"></script>
+    <style>
+            .slider-pagination .slider-page {
+                box-shadow: 0 0 2px #000000;
+            }
+            .slider-container:focus {
+                outline: none;
+                box-shadow: none;
+            }
+            .slider:focus {
+                outline: none;
+                box-shadow: none;
+            }
+            .modal-backdrop {
+                z-index: 0;
+            }
+
+            .modal-content {
+                width: initial;
+            }
+    </style>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('.trigger').click(function(e) {
+                let content = $(e.currentTarget).attr("alt").split("|")
+                $('#exampleModalLabel').html("<b>"+content[0]+"</b>") 
+                $('#exampleSrc').attr('src', $(e.currentTarget).attr("src"))
+                $('#exampleCaption').html(content[1])
+                //$('#imgViewer').html('').append( $(e.currentTarget).clone().removeClass('img-responsive').removeClass('img-thumbnail') )
+                $('#exampleModal').modal('show')
+            })
+        })
+    </script>
+</head>
+
+<body>
+
+    <div class="w3-container" id="paper" style="margin-top: 30px">
+        <div class="w3-content" style="max-width:850px">
+
+            <h1 id="title" style="text-align: center; font-size:3em; font-weight: 700;">RetrievalFuse</h1>
+            <h1 id="title" style="text-align: center; font-size:2em">Neural 3D Scene Reconstruction with a Database
+            </h1>
+
+            <p id="authors" style="text-align: center; margin-top:20px">
+
+                <a target="_blank" href="http://niessnerlab.org/members/yawar_siddiqui/profile.html">Yawar Siddiqui</a><sup>1</sup>
+                &nbsp;&nbsp;&nbsp;&nbsp;
+                <a target="_blank" href="https://justusthies.github.io/">Justus Thies</a><sup>1</sup>
+                &nbsp;&nbsp;&nbsp;&nbsp;
+                <a target="_blank" href="https://fangchangma.github.io/">Fangchang Ma</a><sup>2</sup>
+                &nbsp;&nbsp;&nbsp;&nbsp;
+                <a target="_blank" href="http://shanqi.github.io/">Qi Shan</a><sup>2</sup>
+                &nbsp;&nbsp;&nbsp;&nbsp;
+                <a target="_blank" href="https://www.3dunderstanding.org/index.html">Angela Dai</a><sup>1</sup>
+                &nbsp;&nbsp;&nbsp;&nbsp;
+                <a target="_blank" href="https://www.niessnerlab.org/members/matthias_niessner/profile.html">Matthias
+                    Nie&szlig;ner</a><sup>1</sup>
+                &nbsp;&nbsp;&nbsp;&nbsp;
+            </p>
+
+            <p style="text-align: center; margin-top:10px">
+                <sup>1</sup>Technical University of Munich
+                &nbsp; &nbsp; &nbsp;
+                <sup>2</sup>Apple
+            </p>
+
+
+            <div style="margin-top: 20px; margin-bottom: 20px; text-align: center">
+                <!-- PDF Link. -->
+                <span class="link-block">
+                    <a target="_blank" href="siddiqui_2021_retrieval_fuse.pdf"
+                        class="external-link button is-normal is-rounded is-dark">
+                        <span class="icon">
+                            <svg class="svg-inline--fa fa-file-pdf fa-w-12" aria-hidden="true" focusable="false"
+                                data-prefix="fas" data-icon="file-pdf" role="img" xmlns="http://www.w3.org/2000/svg"
+                                viewBox="0 0 384 512" data-fa-i2svg="">
+                                <path fill="currentColor"
+                                    d="M181.9 256.1c-5-16-4.9-46.9-2-46.9 8.4 0 7.6 36.9 2 46.9zm-1.7 47.2c-7.7 20.2-17.3 43.3-28.4 62.7 18.3-7 39-17.2 62.9-21.9-12.7-9.6-24.9-23.4-34.5-40.8zM86.1 428.1c0 .8 13.2-5.4 34.9-40.2-6.7 6.3-29.1 24.5-34.9 40.2zM248 160h136v328c0 13.3-10.7 24-24 24H24c-13.3 0-24-10.7-24-24V24C0 10.7 10.7 0 24 0h200v136c0 13.2 10.8 24 24 24zm-8 171.8c-20-12.2-33.3-29-42.7-53.8 4.5-18.5 11.6-46.6 6.2-64.2-4.7-29.4-42.4-26.5-47.8-6.8-5 18.3-.4 44.1 8.1 77-11.6 27.6-28.7 64.6-40.8 85.8-.1 0-.1.1-.2.1-27.1 13.9-73.6 44.5-54.5 68 5.6 6.9 16 10 21.5 10 17.9 0 35.7-18 61.1-61.8 25.8-8.5 54.1-19.1 79-23.2 21.7 11.8 47.1 19.5 64 19.5 29.2 0 31.2-32 19.7-43.4-13.9-13.6-54.3-9.7-73.6-7.2zM377 105L279 7c-4.5-4.5-10.6-7-17-7h-6v128h128v-6.1c0-6.3-2.5-12.4-7-16.9zm-74.1 255.3c4.1-2.7-2.5-11.9-42.8-9 37.1 15.8 42.8 9 42.8 9z">
+                                </path>
+                            </svg><!-- <i class="fas fa-file-pdf"></i> Font Awesome fontawesome.com -->
+                        </span>
+                        <span>Paper</span>
+                    </a>
+                </span>
+                <span class="link-block">
+                    <a target="_blank" href="#" disabled=""
+                        class="external-link button is-normal is-rounded is-dark">
+                        <span class="icon">
+                            <i class="ai ai-arxiv"></i>
+                        </span>
+                        <span>arXiv</span>
+                    </a>
+                </span>
+                <!-- Video Link. -->
+                <span class="link-block">
+                    <a target="_blank" href="#" disabled=""
+                        class="external-link button is-normal is-rounded is-dark">
+                        <span class="icon">
+                            <svg class="svg-inline--fa fa-youtube fa-w-18" aria-hidden="true" focusable="false"
+                                data-prefix="fab" data-icon="youtube" role="img" xmlns="http://www.w3.org/2000/svg"
+                                viewBox="0 0 576 512" data-fa-i2svg="">
+                                <path fill="currentColor"
+                                    d="M549.655 124.083c-6.281-23.65-24.787-42.276-48.284-48.597C458.781 64 288 64 288 64S117.22 64 74.629 75.486c-23.497 6.322-42.003 24.947-48.284 48.597-11.412 42.867-11.412 132.305-11.412 132.305s0 89.438 11.412 132.305c6.281 23.65 24.787 41.5 48.284 47.821C117.22 448 288 448 288 448s170.78 0 213.371-11.486c23.497-6.321 42.003-24.171 48.284-47.821 11.412-42.867 11.412-132.305 11.412-132.305s0-89.438-11.412-132.305zm-317.51 213.508V175.185l142.739 81.205-142.739 81.201z">
+                                </path>
+                            </svg><!-- <i class="fab fa-youtube"></i> Font Awesome fontawesome.com -->
+                        </span>
+                        <span>Video</span>
+                    </a>
+                </span>
+                <!-- Code Link. -->
+                <span class="link-block">
+                    <a href="#" class="external-link button is-normal is-rounded is-dark" disabled="">
+                        <span class="icon">
+                            <svg class="svg-inline--fa fa-github fa-w-16" aria-hidden="true" focusable="false"
+                                data-prefix="fab" data-icon="github" role="img" xmlns="http://www.w3.org/2000/svg"
+                                viewBox="0 0 496 512" data-fa-i2svg="">
+                                <path fill="currentColor"
+                                    d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6zm-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3zm44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9zM244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8zM97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1zm-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7zm32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1zm-11.4-14.7c-1.6 1-1.6 3.6 0 5.9 1.6 2.3 4.3 3.3 5.6 2.3 1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2z">
+                                </path>
+                            </svg><!-- <i class="fab fa-github"></i> Font Awesome fontawesome.com -->
+                        </span>
+                        <span>Code</span>
+                    </a>
+                </span>
+            </div>
+
+            <!-- Conference -->
+            <!-- <h2 style="text-align: center; font-size:1.4em; font-weight: 700;">CVPR 2021 (Oral)</h2> -->
+
+            <!-- Start Hero Carousel -->
+            <section class="hero" style="height:480px;  overflow: hidden;">
+                <div id="carousel-demo" class="hero-carousel">
+                    <div class="item-1">
+                        <video poster="" id="surfacerec_3dfront" autoplay="" controls="" muted="" loop="" height="480px">
+                            <source src="data/surfacerec_3dfront.mp4"
+                                type="video/mp4">
+                        </video>
+                    </div>
+                    <div class="item-2">
+                        <video poster="" id="surfacerec_matterport" autoplay="" controls="" muted="" loop="" height="480px">
+                            <source src="data/surfacerec_matterport.mp4"
+                                type="video/mp4">
+                        </video>
+                    </div>
+                    <div class="item-3">
+                        <video poster="" id="surfacerec_shapenet" autoplay="" controls="" muted="" loop="" height="480px">
+                            <source src="data/surfacerec_shapenet.mp4"
+                                type="video/mp4">
+                        </video>
+                    </div>
+                    <div class="item-4">
+                        <video poster="" id="superres_3dfront" autoplay="" controls="" muted="" loop="" height="480px">
+                            <source src="data/superres_3dfront.mp4"
+                                type="video/mp4">
+                        </video>
+                    </div>
+                    <div class="item-5">
+                        <video poster="" id="superres_matterport" autoplay="" controls="" muted="" loop="" height="480px">
+                            <source src="data/superres_matterport.mp4"
+                                type="video/mp4">
+                        </video>
+                    </div>
+                    <div class="item-6">
+                        <video poster="" id="superres_shapenet" autoplay="" controls="" muted="" loop="" height="480px">
+                            <source src="data/superres_shapenet.mp4"
+                                type="video/mp4">
+                        </video>
+                    </div>
+                </div>
+                <div class="hero-head"></div>
+                <div class="hero-body"></div>
+                <div class="hero-foot"></div>
+            </section>
+            <!-- End Hero Carousel -->
+
+            <script src="https://cdn.jsdelivr.net/npm/bulma-carousel@4.0.3/dist/js/bulma-carousel.min.js"></script>
+            <script>
+                bulmaCarousel.attach('#carousel-demo', {
+                    slidesToScroll: 1,
+                    slidesToShow: 1
+                });
+            </script>
+
+            <h3 class="w3-left-align" id="video" style="font-size:1.8em; font-weight: 700; margin-top: 40px">Video</h3>
+            <p>
+                <iframe style="width:850px; height:480px; margin-top: 10px"
+                    src="placeholder" frameborder="0"
+                    allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
+                    allowfullscreen></iframe>
+            </p>
+
+            <div style="margin-top: 40px; margin-bottom: 20px;">
+                <h3 class="w3-left-align" id="video" style="font-size:1.8em; font-weight: 700; margin-top: 20px">
+                    Abstract
+                </h3>
+                <img src="teaser.jpg" style="max-width:100%; margin-top:25px; margin-bottom:25px" />
+                <p style="text-align: justify">
+                    3D reconstruction of large scenes is a challenging problem due to the high-complexity nature of the solution space, in particular for generative neural networks. In contrast to traditional generative learned models which encode the full generative process into a neural network and can struggle with maintaining local details at the scene level, we introduce a new method that directly leverages scene geometry from the training database. First, we learn to synthesize an initial estimate for a 3D scene, constructed by retrieving a top-k set of volumetric chunks from the scene database. These candidates are then refined to a final scene generation with an attention-based refinement that can effectively select the most consistent set of geometry from the candidates and combine them together to create an output scene, facilitating transfer of coherent structures and local detail from train scene geometry. We demonstrate our neural scene reconstruction with a database for the tasks of 3D super resolution and surface reconstruction from sparse point clouds, showing that our approach enables generation of more coherent, accurate 3D scenes, improving on average by over 8% in IoU over state-of-the-art scene reconstruction.
+                </p>
+            </div>
+
+            <div style="margin-top: 40px; margin-bottom: 20px;">
+                <h3 class="w3-left-align" id="video" style="font-size:1.8em; font-weight: 700; margin-top: 20px; margin-bottom: 20px">
+                    Figures
+                </h3>
+                <span>Click to enlarge and view caption.</span>
+                <div class="row" style="margin-top: 20px">
+                    <div class="col-3">
+                        <img
+                        src="figures/method_overview.jpg"
+                        class="w-100 shadow-1-strong rounded mb-3 trigger"
+                        alt="Overview|We present a new approach for 3D reconstruction conditioned on sparse point clouds or low-resolution geometry. Rather than encoding the full generative process in the neural network, which can struggle to represent local detail, we leverage an additional database of volumetric chunks from train scene data. For a given input, multiple approximate reconstructions are first created with retrieved database chunks, which are then fused together with an attention-based blending - facilitating transfer of coherent structures and local detail from the retrieved train chunks to the output reconstruction."/>
+                        <img
+                        src="figures/method_retrieval.png"
+                        class="w-100 shadow-1-strong rounded mb-3 trigger"
+                        alt="Estimating reconstruction with database retrievals|(a) Input and target scenes are decomposed into a total of n<sup>3</sup> chunks each by <i>unfold-n</i>; input/target chunks are embedded into a shared space which is trained using a contrastive loss.The database is composed of embedded target chunks from the train set, and used for retrieval for new input queries.<br/>(b) For a new input, the <i>k</i>-NN retrieved chunks create approximate reconstructions, which can then be refined."/>
+                    </div>
+                    <div class="col-3">
+                        <img
+                        src="figures/method_refinement.jpg"
+                        class="w-100 shadow-1-strong rounded mb-3 trigger"
+                        alt="Reconstruction Refinement|The input and reconstruction approximations are passed through feature extractors. The resulting input feature grid is split into patches spatially aligned with the patch features from the retrieval approximations, which are then fused together with our attention blending network. Finally, the patch-wise blended features are re-interpreted as a full feature volume and decoded to output geometry."/>
+                        <img
+                        src="figures/method_attention.jpg"
+                        class="w-100 shadow-1-strong rounded mb-3 trigger"
+                        alt="Patch Attention|Feature similarity between input and retrieved patch features informs attention scores. Attention weights derived from the scores determine the contribution among the retrievals. A learned blending function then fuses input and retrieval features based on the max attention score."/>
+                    </div>
+                    <div class="col-3">
+                        <img
+                        src="figures/experiments_superresolution.jpg"
+                        class="w-100 shadow-1-strong rounded mb-3 trigger"
+                        alt="Results (3D super-resolution)|3D super resolution on 3DFront (top) and Matterport3D (bottom) datasets. In contrast to other approaches, our method generates more coherent 3D geometry with sharper details."/>
+                        <img
+                        src="figures/experiments_surface_reconstruction.jpg"
+                        class="w-100 shadow-1-strong rounded mb-3 trigger"
+                        alt="Results (Point cloud to surface reconstruction)|Point cloud to surface reconstruction on 3DFront (top) and Matterport3D (bottom) datasets. Our approach captures more coherent structures and object details."/>
+                    </div>
+                    <div class="col-3">
+                        <img
+                        src="figures/experiment_components.jpg"
+                        class="w-100 shadow-1-strong rounded mb-3 trigger"
+                        alt="Effect of various components|Qualitative evaluation of our method (<i>Ours</i>) in comparison to 1<sup>st</sup> nearest neighbor retrieval (<i>1-NN Retrieval</i>), our refinement network without retrievals (<i>Backbone</i>) and naive fusion of retrieved approximations during refinement (<i>Naive</i>)."/>
+                        <img
+                        src="figures/experiment_implicit.jpg"
+                        class="w-100 shadow-1-strong rounded mb-3 trigger"
+                        alt="Results (Implicit variant)|Performance of an implicit variant of method that extends IFNet. Evaluated on 3D super-resolution task on 3DFront dataset."/>
+                    </div>
+                    <div class="col-3">
+                        <img
+                        src="figures/appendix_level_of_operation.jpg"
+                        class="w-100 shadow-1-strong rounded mb-3 trigger"
+                        alt="Levels of operation|In our experiments, we use 64<sup>3</sup> target chunks for target geometry, and larger scenes work in a sliding window fashion (left). The retrieval candidates are 16<sup>3</sup> chunks (middle), and attention-based blending works on 4<sup>3</sup> patches (right)."/>
+                        <img
+                        src="figures/appendix_architecture.jpg"
+                        class="w-100 shadow-1-strong rounded mb-3 trigger"
+                        alt="Architecture|Network architecture used in our 3D super-resolution experiments. Convolution parameters are given as (input features, output feature, kernel size, stride), with default stride of 1 if not specified. Array of circles represent fully connected (FC) layers. 
+    For the task of point cloud to surface reconstruction, the input chunk embedding network is a convolutional layer instead of MLP with a fully connected layer at the end on account of larger input chunk size (since input is a 128<sup>3</sup> grid for surface reconstruction in comparison to 8<sup>3</sup> grid for super-resolution, we use a chunk size of 32<sup>3</sup> for inputs there). Additionally, the input feature extractor is deeper for point cloud to surface reconstruction on account on bigger input grid."/>
+                    </div>
+                    <div class="col-3">
+                        <img
+                        src="figures/appendix_implicit.png"
+                        class="w-100 shadow-1-strong rounded mb-3 trigger"
+                        alt="Architecture (Implicit)|Integration of our RetrievalFuse approach to the implicit network of IFNet. We use IFNet's encoder as the input feature encoder and their decoder as the implicit decoder. Additionally, we use a retrieval encoder similar to the IFNet encoder for obtaining features for the retrieval approximations. Further, a patch attention layer computes a blend coefficient grid and attention weight grid. For a given query point in space, features are sampled from input feature grids, retrieval feature grids. A blend coefficient value and attention weights are sampled from the blend coefficient grid and attention weight grid at the queried point. The sampled input features and retrieval features are blended based on these valued and finally decoded to an occupancy value by the IFNet decoder."/>
+                        <img
+                        src="figures/appendix_latent_space.jpg"
+                        class="w-100 shadow-1-strong rounded mb-3 trigger"
+                        alt="Retrieval Embedding Space|(a) Chunk embedding space visualized for 5000 chunks from 3DFront test set. This embedding space used for retrievals from the database by projecting an input chunk into this space (visualized as green dots) and retrieving k-nearest database chunks (visualized by yellow dots) from it.<br/>(b) Input queries and their corresponding 4 nearest neighbors from the embedding space. For the sake of visual clarity, input queries are visualized as their corresponding ground truth reconstruction."/>
+                    </div>
+                    <div class="col-3">
+                        <img
+                        src="figures/appendix_ablation_components.jpg"
+                        class="w-100 shadow-1-strong rounded mb-3 trigger"
+                        alt="Effect of various components (Additional)|Additional Qualitative evaluation of our method (<i>Ours</i>) in comparison to 1<sup>st</sup> nearest neighbor retrieval (<i>1-NN Retrieval</i>), our refinement network without retrievals (<i>Backbone</i>) and naive fusion of retrieved approximations during refinement (<i>Naive</i>)."/>
+                        <img
+                        src="figures/appendix_bad_retrieval_3dfront.jpg"
+                        class="w-100 shadow-1-strong rounded mb-3 trigger"
+                        alt="Suboptimal retrievals|Suboptimal retrievals do not improve results significantly over our Backbone network. However, reconstruction produced are also not degraded due to subobtimal retrievals. Qualitative results from 3DFront super-resolution task."/>
+                    </div>
+                    <div class="col-3">
+                        <img
+                        src="figures/appendix_robust.jpg"
+                        class="w-100 shadow-1-strong rounded mb-3 trigger"
+                        alt="Subobtimal Retrievals on ShapeNet subset experiment|(Left) Suboptimal retrievals (NN1) when the our method is trained on a ShapeNet subset of 8 classes and evaluated on another 5 classes. The database contains chunks only from the original 8 classes. In this case, the suboptimal retrievals don't help the reconstruction, and the quality of reconstruction does not significantly improve over our backbone network. However, in contrast to naive fusion of retrieval features, our reconstruction quality does not degrade over the backbone.<br/>(Right) If the database if augmented with new chunks from train set of the new 5 classes, the reconstruction quality visibly improves without retraining."/>
+                        <img
+                        src="figures/appendix_superresolution.jpg"
+                        class="w-100 shadow-1-strong rounded mb-3 trigger"
+                        alt="Additional Results (3D super-resolution)|Additional qualitative results on 3DFront (left three) and Matterport3D (right three) on 3D super-resolution task."/>
+                    </div>
+                    <div class="col-3">
+                        <img
+                        src="figures/appendix_surface_reconstruction.jpg"
+                        class="w-100 shadow-1-strong rounded mb-3 trigger"
+                        alt="Additional Results (Point cloud to surface reconstruction)|Additional qualitative results on 3DFront (left three) and Matterport3D (right three) on point cloud to surface reconstruction task."/>
+                    </div>
+                    <div class="col-3">
+                        <img
+                        src="figures/appendix_shapenet.jpg"
+                        class="w-100 shadow-1-strong rounded mb-3 trigger"
+                        alt="Results (ShapeNet)|Qualitative results on ShapeNet dataset on 3D super-resolution (left three) and point cloud to surface reconstruction (right three) tasks."/>
+                    </div>
+                </div>
+            </div>
+
+            <div style="margin-top: 40px; margin-bottom: 20px;"></div>
+            <h3 class="w3-left-align" id="video" style="font-size:1.8em; font-weight: 700; margin-top: 20px">Publication
+            </h3>
+
+            <a href="siddiqui_2021_retrieval_fuse.pdf" target="_blank"><img src="paper.jpg"
+                    style="max-width:100%" /></a>
+
+            If you find our project useful, please consider citing us:
+            <pre class="w3-panel w3-leftbar w3-light-grey"
+                style="white-space: pre-wrap; font-family: monospace; font-size: 11px">
+
+                # Add bibtext 
+
+            </pre>
+        </div>
+
+    </div>
+
+    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-xl" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                      <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <img src="" id="exampleSrc" class="w-100 shadow-1-strong rounded" alt=""/>
+                    <p id="exampleCaption" style="margin-top: 25px;">
+
+                    </p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</body>
+
+</html>
