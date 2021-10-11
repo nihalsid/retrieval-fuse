@@ -1,7 +1,5 @@
 # RetrievalFuse
 
----
-
 ### [Paper](https://arxiv.org/pdf/2104.00024.pdf) | [Project Page](https://nihalsid.github.io/retrieval-fuse/) | [Video](https://youtu.be/HbsUU0YODqE)
 
 > RetrievalFuse: Neural 3D Scene Reconstruction with a Database <br />
