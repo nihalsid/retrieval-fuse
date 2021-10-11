@@ -1,0 +1,47 @@
+inherit_from: base/retrieval_superresolution.yaml
+dataset:
+  dataset_name: Matterport3D16
+  splits_dir: main
+  voxel_size_input: 15.0
+  voxel_size_target: 3.75
+  preload_scenes: True
+  input_mean: 35.62394659115317
+  input_std: 14.58642912987053
+  target_mean: 10.502049923464249
+  target_std: 2.3319665041587627
+  patch_size_input: 4
+  patch_context_input: 2
+  patch_size_target: 16
+  patch_context_target: 8
+  patch_stride: 16
+  input_chunk_size: 16
+  target_chunk_size: 64
+  input_dir: sdf_016
+  target_dir: sdf_064
+  skip_occupancy: True
+
+dataset_train:
+  rotation_augment: False
+
+retrieval_training:
+  num_workers: 8
+  batch_size: 192
+  scheduler: [ 100, 120 ]
+  iou_scaling: True
+
+retrieval_model:
+  network_input: 4+2
+  network_target: 16+8
+  nf_input: 16
+  nf_target: 8
+  latent_dim: 64
+
+dictionary:
+  batch_size: 512
+  num_workers: 8
+
+query:
+  batch_size: 1024
+  num_workers: 8
+  K: 1
+  flann_num_workers: 4

@@ -1,0 +1,70 @@
+task: surface_reconstruction
+fast_visualization: True
+no_retrievals: True
+retrieval_ckpt: None
+dataset:
+  num_points: 1000
+  train_multiplier: 1
+  patch_size_input: 32
+  patch_context_input: 8
+  patch_size_target: 16
+  patch_context_target: 4
+  patch_stride: 16
+  input_ext: .npz
+  skip_occupancy: False
+  target_ext: .npz
+  data_dir: data/
+  scene_dir: data/
+  retrieval_dir: data/
+  dataset_name: ~
+  input_chunk_size: 128
+  target_chunk_size: 64
+  input_dir: pc_20K
+  target_dir: sdf_064
+  splits_dir: ~
+  voxel_size_input: ~
+  voxel_size_target: ~
+  preload_scenes: True
+  preload_retrievals: False
+  occupancy_threshold: 0
+  input_mean: 0
+  input_std: 1
+  target_mean: ~
+  target_std: ~
+  rotation_augment: False
+
+retrieval_model:
+  network_input: pc_32+8
+  network_target: 16+4
+  nf_input: 10
+  nf_target: 12
+  latent_dim: 64
+
+retrieval_training:
+  lr: 0.0001
+  num_workers: 8
+  batch_size: 512
+  code_noise: 0
+  input_noise: 0
+  scheduler: ~
+  temprature: 0.2
+  iou_scaling: False
+  loss:
+    contrastive: 1
+
+
+dictionary:
+  batch_size: 256
+  num_workers: 4
+
+query:
+  batch_size: 128
+  num_workers: 4
+  K: 4
+  flann_num_workers: 4
+
+dataset_train:
+  occupancy_threshold: 0
+
+dataset_val:
+  occupancy_threshold: -1

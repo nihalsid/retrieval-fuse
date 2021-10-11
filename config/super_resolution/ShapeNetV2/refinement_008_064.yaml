@@ -1,0 +1,32 @@
+inherit_from: base/refinement_superresolution.yaml
+
+nf: 14
+num_points: 0
+unet_num_level: 4
+layer_order: gcr
+retrieval_fmaps: 14
+retrieval_num_level: 3
+attn_normalize: True
+attn_use_switching: True
+attn_retrieval_mode: True
+attn_no_output_mapping: True
+attn_blend: True
+attn_patch_extent: 4
+attn_num_patch: 16
+attn_temprature: 0.05
+num_workers: 8
+disable_train_vis: True
+disable_attn_vis: True
+scheduler: [110, 125]
+
+dataset:
+  dataset_name: ShapeNetV2
+  splits_dir: main
+  voxel_size_input: 0.166667
+  voxel_size_target: 0.020834
+  preload_scenes: False
+  preload_retrievals: False
+  input_mean: 0.3095340441938771
+  input_std: 0.14730652990291243
+  target_mean: 0.059954833543534335
+  target_std: 0.010110036361741626

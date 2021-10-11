@@ -1,0 +1,27 @@
+inherit_from: base/retrieval_superresolution.yaml
+dataset:
+  dataset_name: 3DFront
+  splits_dir: main
+  voxel_size_input: 0.43334
+  voxel_size_target: 0.054167
+  preload_scenes: False
+  input_mean: 0.8112343966484424
+  input_std: 0.5094238937427482
+  target_mean: 0.15015658121788053
+  target_std: 0.03573221820637578
+
+retrieval_training:
+  num_workers: 8
+  batch_size: 192
+  scheduler: [75, 80]
+  iou_scaling: True
+
+dictionary:
+  batch_size: 512
+  num_workers: 8
+
+query:
+  batch_size: 512
+  num_workers: 8
+  K: 4
+  flann_num_workers: 0

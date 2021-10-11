@@ -1,0 +1,69 @@
+task: superresolution
+fast_visualization: True
+no_retrievals: True
+retrieval_ckpt: None
+dataset:
+  num_points: 0
+  skip_occupancy: False
+  train_multiplier: 1
+  patch_size_input: 2
+  patch_context_input: 1
+  patch_size_target: 16
+  patch_context_target: 8
+  patch_stride: 16
+  input_ext: .npz
+  target_ext: .npz
+  data_dir: data/
+  scene_dir: data/
+  retrieval_dir: data/
+  dataset_name: ~
+  input_chunk_size: 8
+  target_chunk_size: 64
+  input_dir: sdf_008
+  target_dir: sdf_064
+  splits_dir: ~
+  voxel_size_input: ~
+  voxel_size_target: ~
+  preload_scenes: True
+  preload_retrievals: False
+  input_mean: ~
+  input_std: ~
+  target_mean: ~
+  target_std: ~
+  rotation_augment: False
+
+dataset_train:
+  occupancy_threshold: 0
+
+dataset_val:
+  occupancy_threshold: -1
+
+retrieval_model:
+  network_input: 2+1
+  network_target: 16+8
+  nf_input: 32
+  nf_target: 8
+  latent_dim: 64
+
+retrieval_training:
+  lr: 0.0001
+  num_workers: 8
+  code_noise: 0
+  input_noise: 0
+  batch_size: 512
+  scheduler: ~
+  temprature: 0.2
+  iou_scaling: False
+  loss:
+    contrastive: 1
+
+
+dictionary:
+  batch_size: 512
+  num_workers: 4
+
+query:
+  batch_size: 2048
+  num_workers: 4
+  K: 4
+  flann_num_workers: 4

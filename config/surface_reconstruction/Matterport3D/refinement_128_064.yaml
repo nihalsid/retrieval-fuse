@@ -1,0 +1,32 @@
+inherit_from: base/refinement_surface_reconstruction.yaml
+
+nf: 12
+unet_num_level: 5
+layer_order: gcr
+retrieval_fmaps: 12
+retrieval_num_level: 4
+attn_patch_extent: 4
+attn_normalize: True
+attn_use_switching: True
+attn_retrieval_mode: False
+attn_no_output_mapping: True
+attn_blend: True
+attn_num_patch: 16
+num_workers: 8
+disable_train_vis: True
+disable_attn_vis: True
+
+dataset:
+  num_points: 1000
+  dataset_name: Matterport3D16
+  splits_dir: main
+  preload_scenes: False
+  preload_retrievals: False
+  voxel_size_input: 0
+  voxel_size_target: 3.75
+  target_mean: 10.502049923464249
+  target_std: 2.3319665041587627
+
+dataset_train:
+  rotation_augment: False
+  train_multiplier: 1

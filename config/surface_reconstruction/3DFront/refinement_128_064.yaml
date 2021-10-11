@@ -1,0 +1,31 @@
+inherit_from: base/refinement_surface_reconstruction.yaml
+
+nf: 12
+unet_num_level: 5
+layer_order: gcr
+retrieval_fmaps: 12
+retrieval_num_level: 4
+attn_patch_extent: 4
+attn_normalize: True
+attn_use_switching: True
+attn_retrieval_mode: False
+attn_no_output_mapping: True
+attn_blend: True
+attn_num_patch: 16
+num_workers: 8
+disable_train_vis: True
+disable_attn_vis: True
+
+dataset:
+  num_points: 500
+  dataset_name: 3DFront
+  splits_dir: main
+  voxel_size_input: 0
+  voxel_size_target: 0.054167
+  preload_scenes: False
+  preload_retrievals: False
+  target_mean: 0.15015658121788053
+  target_std: 0.03573221820637578
+
+dataset_train:
+  train_multiplier: 1

@@ -1,0 +1,27 @@
+inherit_from: base/retrieval_superresolution.yaml
+dataset:
+  dataset_name: ShapeNetV2
+  splits_dir: main
+  voxel_size_input: 0.166667
+  voxel_size_target: 0.020834
+  preload_scenes: True
+  input_mean: 0.34774827082940146
+  input_std: 0.16208995673899929
+  target_mean: 0.060043341595512584
+  target_std: 0.009982546908894512
+
+retrieval_training:
+  num_workers: 8
+  batch_size: 128
+  scheduler: [50, 75]
+  iou_scaling: True
+
+dictionary:
+  batch_size: 512
+  num_workers: 8
+
+query:
+  batch_size: 512
+  num_workers: 8
+  K: 1
+  flann_num_workers: 0

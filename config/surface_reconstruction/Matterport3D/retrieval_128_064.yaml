@@ -1,0 +1,28 @@
+inherit_from: base/retrieval_surface_reconstruction.yaml
+dataset:
+  dataset_name: Matterport3D16
+  num_points: 1000
+  splits_dir: main
+  voxel_size_input: 0
+  voxel_size_target: 3.75
+  preload_scenes: True
+  occupancy_threshold: 0
+  target_mean: 10.502049923464249
+  target_std: 2.3319665041587627
+
+retrieval_training:
+  num_workers: 8
+  batch_size: 256
+  scheduler: [70, 80]
+
+dictionary:
+  batch_size: 256
+  num_workers: 8
+
+K: 1
+
+query:
+  batch_size: 128
+  num_workers: 8
+  K: 1
+  flann_num_workers: 4

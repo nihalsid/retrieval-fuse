@@ -1,0 +1,39 @@
+inherit_from: base/refinement_superresolution.yaml
+
+nf: 16
+unet_num_level: 4
+layer_order: gcr
+retrieval_fmaps: 16
+retrieval_num_level: 4
+attn_patch_extent: 4
+attn_normalize: True
+attn_use_switching: True
+attn_retrieval_mode: False
+attn_no_output_mapping: True
+attn_blend: True
+attn_num_patch: 16
+num_workers: 8
+disable_train_vis: True
+disable_attn_vis: True
+scheduler: [105, 115]
+
+dataset:
+  dataset_name: Matterport3D16
+  splits_dir: main
+  preload_scenes: False
+  preload_retrievals: False
+  voxel_size_input: 15.0
+  voxel_size_target: 3.75
+  input_mean: 35.62394659115317
+  input_std: 14.58642912987053
+  target_mean: 10.502049923464249
+  target_std: 2.3319665041587627
+  input_chunk_size: 16
+  input_dir: sdf_016
+  target_dir: sdf_064
+  patch_size_input: 16
+  patch_context_input: 0
+
+dataset_train:
+  rotation_augment: False
+  train_multiplier: 1

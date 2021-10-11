@@ -1,0 +1,34 @@
+inherit_from: base/retrieval_surface_reconstruction.yaml
+dataset:
+  dataset_name: ShapeNetV2
+  num_points: 500
+  splits_dir: main
+  voxel_size_input: 0
+  voxel_size_target: 0.020834
+  preload_scenes: True
+  occupancy_threshold: 0
+  target_mean: 0.060043341595512584
+  target_std: 0.009982546908894512
+
+retrieval_model:
+  network_input: pc_32+8
+  network_target: 16+4V2
+  nf_input: 12
+  nf_target: 12
+  latent_dim: 64
+
+retrieval_training:
+  num_workers: 8
+  batch_size: 128
+  scheduler: [ 50, 65 ]
+  iou_scaling: True
+
+dictionary:
+  batch_size: 256
+  num_workers: 8
+
+query:
+  batch_size: 128
+  num_workers: 8
+  K: 1
+  flann_num_workers: 4
