@@ -16,7 +16,7 @@ This repository contains the code for the ICCV 2021 paper RetrievalFuse, a novel
 
 ### File and Folders
 
----
+<hr/>
 
 Broad code structure is as follows: 
 
@@ -89,7 +89,7 @@ data                    # root data directory
  
 ### Dependencies
 
----
+<hr/>
 Install the dependencies using pip
 ```bash
 pip install -r requirements.txt
@@ -98,7 +98,7 @@ Be sure that you pull the `ChamferDistancePytorch` submodule in `external`.
 
 ### Data Preparation
 
----
+<hr/>
 
 For ShapeNetV2 and Matterport, get the appropriate meshes from the datasets. For 3DFRONT get the 3DFUTURE meshes and 3DFRONT scripts. For getting 3DFRONT meshes use [our fork of 3D-FRONT-ToolBox](https://github.com/nihalsid/3D-FRONT-ToolBox/tree/master/scripts) to create room meshes.
 
@@ -112,7 +112,7 @@ Once you have the meshes, use [our fork of `sdf-gen`]() to create distance field
 
 ### Training the Retrieval Network
 
----
+<hr/>
 
 To train retrieval networks use the following command:
 
@@ -144,7 +144,7 @@ python util/retrieval.py --mode compose --retrieval_ckpt <trained_retrieval_ckpt
 
 ### Training the Refinement Network
 
----
+<hr/>
 
 Use the following command to train the refinement network
 
@@ -167,11 +167,11 @@ For surface-reconstruction, e.g.
 - `config/surface_reconstruction/Matterport3D/refinement_128_064.yaml`
 
 ### Visualizations and Logs
-
+<hr/>
 Visualizations and checkpoints are dumped in the `runs/<experiment>` directory. Logs are uploaded to the user's [Weights&Biases](https://wandb.ai/site) dashboard.
 
 ### Citation
-
+<hr/>
 If you find our work useful in your research, please consider citing:
 ```
 @inproceedings{siddiqui2021retrievalfuse,
@@ -186,5 +186,5 @@ If you find our work useful in your research, please consider citing:
 ```
 
 ### License
-
+<hr/>
 The code from this repository is released under the MIT license.
