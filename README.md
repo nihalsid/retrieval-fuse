@@ -173,6 +173,7 @@ Visualizations and checkpoints are dumped in the `runs/<experiment>` directory. 
 ### Citation
 <hr/>
 If you find our work useful in your research, please consider citing:
+
 ```
 @inproceedings{siddiqui2021retrievalfuse,
   title = {RetrievalFuse: Neural 3D Scene Reconstruction with a Database},
