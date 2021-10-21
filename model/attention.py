@@ -62,6 +62,7 @@ class AttentionBlock(nn.Module):
         self.sig_scale = nn.Parameter(torch.ones(1) * self.init_scale)
         self.sig_shift = nn.Parameter(torch.ones(1) * self.init_shift)
         self.sigmoid = nn.Sigmoid()
+        self.relu = nn.ReLU()
         self.softmax = torch.nn.Softmax(dim=1)
         self.retrieval_mode = retrieval_mode
         self.blend_mode = blend
@@ -93,7 +94,9 @@ class AttentionBlock(nn.Module):
         g_feat_flat = self.g(p.reshape(b * k, -1, e, e, e)).reshape((b, k, -1, e, e, e)).reshape((b, k, -1))
 
         scores = torch.einsum('ij,ijk->ik', x_feat_flat, p_feat_flat.permute((0, 2, 1)))
-        switch = self.sigmoid(self.max(scores.view(b, 1, k)).view(b, 1) * self.sig_scale + self.sig_shift) if self.use_switching else 1
+        # switch = self.sigmoid(self.max(scores.view(b, 1, k)).view(b, 1) * self.sig_scale + self.sig_shift) if self.use_switching else 1
+        # nihalsid: try simple relu switching instead of learning shift and scale
+        switch = self.relu(self.max(scores.view(b, 1, k)).view(b, 1))
         if self.retrieval_mode:
             scaled_similarity_scores = scores * 25
             weights = torch.nn.functional.gumbel_softmax(scaled_similarity_scores, tau=1, hard=True)

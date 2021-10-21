@@ -91,10 +91,13 @@ data                    # root data directory
 
 <hr/>
 Install the dependencies using pip
-```bash
+
+```
 pip install -r requirements.txt
 ```
+
 Be sure that you pull the `ChamferDistancePytorch` submodule in `external`.
+
 
 ### Data Preparation
 
@@ -114,7 +117,7 @@ Once you have the meshes, use [our fork of `sdf-gen`]() to create distance field
 
 <hr/>
 
-To train retrieval networks use the following command:
+Make sure that `CUDA_HOME` variable is set. To train retrieval networks use the following command:
 
 ```bash
 python trainer/train_retrieval.py --config config/<config> --val_check_interval 5 --experiment retrieval --wandb_main --sanity_steps 1
@@ -168,7 +171,33 @@ For surface-reconstruction, e.g.
 
 ### Visualizations and Logs
 <hr/>
+
 Visualizations and checkpoints are dumped in the `runs/<experiment>` directory. Logs are uploaded to the user's [Weights&Biases](https://wandb.ai/site) dashboard.
+
+### Processed Data & Models (ShapeNet)
+<hr/>
+
+Download processed data for ShapeNetV2 dataset using the following command
+```commandline
+bash data/download_shapenet_processed.sh
+```
+This will populate the `data/sdf_008`, `data/sdf_064`, `data/pc_20K`, `data/occupancy` and `data/size` folders with processed ShapeNet data.  
+
+To download trained models on ShapeNetV2 use the following script
+```commandline
+bash data/download_shapenet_models.sh
+```
+This downloads the checkpoints for retrieval and refinement for ShapeNet on both super-resolution and surface reconstruction tasks, plus the already computed retrievals. You can resume training these with the `--resume` flag in appropriate scripts (or inference with `--sanity_steps` flag).  E.g. for resuming (and / or dumping inferences from `data/splits/ShapeNetV2/main/val_vis.txt`) use the following command
+
+```commandline
+# super-resolution
+python trainer/train_refinement.py --config config/super_resolution/ShapeNetV2/refinement_008_064.yaml  --sanity_steps -1 --resume runs/checkpoints/superres_refinement_ShapeNetV2.ckpt --retrieval_ckpt runs/07101959_superresolution_ShapeNetV2_upload/_ckpt_epoch=79.ckpt --current_phase 3 --max_epoch 161 --new_exp_for_resume
+```
+```commandline
+# surface-reconstruction
+python trainer/train_refinement.py --config config/surface_reconstruction/ShapeNetV2/refinement_128_064.yaml  --sanity_steps -1 --resume runs/checkpoints/surfacerecon_refinement_ShapeNetV2.ckpt --retrieval_ckpt runs/07101959_surface_reconstruction_ShapeNetV2_upload/_ckpt_epoch=59.ckp --current_phase 3 --max_epoch 161 --new_exp_for_resume
+```
+
 
 ### Citation
 <hr/>

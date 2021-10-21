@@ -8,7 +8,7 @@ retrieval_num_level: 4
 attn_patch_extent: 4
 attn_normalize: True
 attn_use_switching: True
-attn_retrieval_mode: False
+attn_retrieval_mode: True
 attn_no_output_mapping: True
 attn_blend: True
 attn_num_patch: 16

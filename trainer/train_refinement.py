@@ -3,7 +3,7 @@ from pathlib import Path
 import pytorch_lightning as pl
 import torch
 import torch.utils.data
-from tabulagit adte import tabulate
+from tabulate import tabulate
 from tqdm import tqdm
 import numpy as np
 

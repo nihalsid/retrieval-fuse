@@ -1,11 +1,11 @@
 inherit_from: base/refinement_superresolution.yaml
 
-nf: 14
+nf: 16
 num_points: 0
 unet_num_level: 4
 layer_order: gcr
-retrieval_fmaps: 14
-retrieval_num_level: 3
+retrieval_fmaps: 16
+retrieval_num_level: 4
 attn_normalize: True
 attn_use_switching: True
 attn_retrieval_mode: True
